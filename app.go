@@ -1,23 +1,23 @@
 package main
 
-import "net/http"
-import "database/sql"
-import "github.com/gorilla/mux"
-import _ "github.com/mattn/go-sqlite3"
+import (
+	"net/http"
+	"github.com/gorilla/mux"
+)
 
 type Application struct {
-	jwtTTL int
-	jwtSecret string
-    DB *sql.DB
+	jwtTTL     int
+	jwtSecret  string
+	Storage    *Storage
 }
 
-func start(time int, secret string, storage string, address string) (*Application, error) {
-	db, err := sql.Open("sqlite3", storage)
-    if err != nil {
+func start(time int, secret string, storagePath string, address string) (*Application, error) {
+	storage, err := NewStorage(storagePath)
+	if err != nil {
 		return nil, err
-    }
+	}
 
-	app := Application{time, secret, db}
+	app := Application{jwtTTL: time, jwtSecret: secret, Storage: storage}
 	
 	r := mux.NewRouter()
 	r.HandleFunc("/auth/login", app.loginHandler).Methods("POST")
@@ -32,5 +32,5 @@ func start(time int, secret string, storage string, address string) (*Applicatio
 }
 
 func (app *Application) stop() {
-	app.DB.Close()
+	app.Storage.Close()
 }

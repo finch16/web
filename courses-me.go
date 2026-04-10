@@ -1,17 +1,9 @@
 package main
 
-import "database/sql"
-
-type SeriesData struct {
-    ID     int
-    Name   string
-    Values map[int]float64
-}
-
 type User struct {
 	ID             int
 	Username       string
-	Email          sql.NullString
+	Email          string
 	PasswordSHA256 string
 }
 
@@ -20,7 +12,7 @@ type Course struct {
 	Slug        string
 	Title       string
 	Language    string
-	Description sql.NullString
+	Description string
 }
 
 type UserCourse struct {
