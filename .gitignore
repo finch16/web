@@ -1,4 +1,4 @@
 gen-secret
 go.sum
 server
-store.db
+storage.db
